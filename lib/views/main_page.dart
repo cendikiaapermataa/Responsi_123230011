@@ -16,9 +16,7 @@ class MainPage extends GetView<MainController> {
       appBar: AppBar(
         title: Obx(
           () => Text(
-            controller.currentIndex.value == 0
-                ? 'Characters'
-                : 'Spells Gallery',
+            controller.currentIndex.value == 0 ? 'Books' : 'Spells Gallery',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -28,6 +26,11 @@ class MainPage extends GetView<MainController> {
         backgroundColor: Colors.pink[300],
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.person, color: Colors.white),
+            tooltip: 'Profile',
+            onPressed: () => Get.toNamed('/profile'),
+          ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
@@ -102,8 +105,8 @@ class MainPage extends GetView<MainController> {
           selectedItemColor: Colors.pink[400],
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Characters',
+              icon: Icon(Icons.menu_book),
+              label: 'Books',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.auto_fix_high),
@@ -119,7 +122,7 @@ class MainPage extends GetView<MainController> {
 // --- Batas Kelas Utama MainPage ---
 // Sisa kode di bawahnya (_CharacterListTab dan _SpellListTab) tetap sama persis seperti sebelumnya.
 
-class _CharacterListTab extends GetView<CharacterController> {
+class _CharacterListTab extends GetView<BookController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -127,9 +130,9 @@ class _CharacterListTab extends GetView<CharacterController> {
         return const Center(child: CircularProgressIndicator());
       }
       return ListView.builder(
-        itemCount: controller.characters.length,
+        itemCount: controller.booksList.length,
         itemBuilder: (context, index) {
-          final char = controller.characters[index];
+          final book = controller.booksList[index];
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             elevation: 2,
@@ -137,30 +140,30 @@ class _CharacterListTab extends GetView<CharacterController> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListTile(
-              leading: char.image.isNotEmpty
+              leading: book.coverImage.isNotEmpty
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(
-                        char.image,
+                        book.coverImage,
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,
                         errorBuilder: (c, e, s) =>
-                            const Icon(Icons.person, size: 50),
+                            const Icon(Icons.book, size: 50),
                       ),
                     )
-                  : const Icon(Icons.person, size: 50, color: Colors.grey),
+                  : const Icon(Icons.book, size: 50, color: Colors.grey),
               title: Text(
-                char.fullName,
+                book.title,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(char.hogwartsHouse),
+              subtitle: Text(book.publisher),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
                 color: Colors.grey,
               ),
-              onTap: () => Get.toNamed('/detail', arguments: char),
+              onTap: () => Get.toNamed('/detail', arguments: book),
             ),
           );
         },

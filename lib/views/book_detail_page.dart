@@ -94,7 +94,7 @@ class BookDetailPage extends StatelessWidget {
                 title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.pink[800],
+                  color: const Color.fromARGB(255, 184, 23, 93),
                 ),
               ),
             ),

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/book.dart';
 
 class BookController extends GetxController {
-  final RxList<Book> books = <Book>[].obs;
+  final RxList<Book> booksList = <Book>[].obs;
   final RxBool isLoading = false.obs;
 
   @override
@@ -27,11 +27,12 @@ class BookController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.get(
-        Uri.parse('https://potterapifedeperin.vercel.app/en/books'),
+        // Gunakan host yang sama dengan Spell API (memperbaiki typo/hyphen)
+        Uri.parse('https://potterapi-fedeperin.vercel.app/en/books'),
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        books.assignAll(data.map((e) => Book.fromJson(e)).toList());
+        booksList.assignAll(data.map((e) => Book.fromJson(e)).toList());
       }
     } catch (e) {
       Get.snackbar('Error', 'Gagal mengambil data book');

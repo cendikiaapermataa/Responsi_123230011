@@ -4,10 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/notification_service.dart';
 
 class AuthController extends GetxController {
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final usernameCtrl = TextEditingController();
+  final passwordCtrl = TextEditingController();
 
   var isPasswordHidden = true.obs;
+  final RxBool isLoading = false.obs;
 
   // --- HARDCODE PASSWORD DENGAN 3 DIGIT TERAKHIR NIM KAMU ---
   final String nimPassword = "011"; // GANTI DENGAN 3 DIGIT TERAKHIR NIM KAMU!
@@ -17,8 +18,8 @@ class AuthController extends GetxController {
   }
 
   void login() async {
-    String username = usernameController.text.trim();
-    String password = passwordController.text.trim();
+    String username = usernameCtrl.text.trim();
+    String password = passwordCtrl.text.trim();
 
     // 1. Validasi: Username dan password tidak boleh kosong (+4 poin)
     if (username.isEmpty || password.isEmpty) {
@@ -38,7 +39,10 @@ class AuthController extends GetxController {
       return;
     }
 
+    isLoading.value = true;
+
     // 3. Validasi: Password harus 3 digit terakhir NIM (+2 poin)
+    await Future.delayed(const Duration(milliseconds: 300));
     if (password == nimPassword) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('username', username);
@@ -49,8 +53,10 @@ class AuthController extends GetxController {
         "Selamat datang kembali, $username! 💕",
       );
 
+      isLoading.value = false;
       Get.offAllNamed('/main'); // Berhasil, arahkan ke Halaman Utama
     } else {
+      isLoading.value = false;
       NotificationService.showError(
         "Login Gagal",
         "Password harus 3 digit terakhir NIM!",
@@ -58,10 +64,16 @@ class AuthController extends GetxController {
     }
   }
 
+  void logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('username');
+    Get.offAllNamed('/login');
+  }
+
   @override
   void onClose() {
-    usernameController.dispose();
-    passwordController.dispose();
+    usernameCtrl.dispose();
+    passwordCtrl.dispose();
     super.onClose();
   }
 }

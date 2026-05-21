@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mainCtrl = Get.find<MainController>();
-    final bookCtrl = Get.put(BookController());
+    final bookCtrl = Get.find<BookController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -79,10 +79,14 @@ class HomePage extends StatelessWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                        const Icon(
+                          Icons.menu_book,
+                          color: Colors.pink,
+                          size: 16,
+                        ),
                         const SizedBox(width: 4),
                         Text(
-                          "Rating: ${book.rating}",
+                          "Pages: ${book.pageCount}",
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
