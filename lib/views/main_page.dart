@@ -157,7 +157,12 @@ class _CharacterListTab extends GetView<BookController> {
                 book.title,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(book.publisher),
+              subtitle: Text(
+                book.authors.isNotEmpty
+                    ? book.authors.join(', ')
+                    : book.publisher,
+                style: TextStyle(color: Colors.grey[700]),
+              ),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,

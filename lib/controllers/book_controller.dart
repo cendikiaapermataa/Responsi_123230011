@@ -26,16 +26,41 @@ class BookController extends GetxController {
   Future<void> fetchBooks() async {
     isLoading.value = true;
     try {
-      final response = await http.get(
-        // Gunakan host yang sama dengan Spell API (memperbaiki typo/hyphen)
-        Uri.parse('https://potterapi-fedeperin.vercel.app/en/books'),
-      );
-      if (response.statusCode == 200) {
+      // Try the assignment-specified URL first, then a known alternative
+      final urls = [
+        'https://potterapifedeperin.vercel.app/en/books',
+        'https://potterapi-fedeperin.vercel.app/en/books',
+      ];
+      http.Response? response;
+      for (final u in urls) {
+        try {
+          response = await http.get(Uri.parse(u));
+          if (response.statusCode == 200) break;
+        } catch (_) {
+          response = null;
+        }
+      }
+
+      if (response != null && response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         booksList.assignAll(data.map((e) => Book.fromJson(e)).toList());
+        if (data.isNotEmpty) {
+          // Print sample object for debugging field names
+          // ignore: avoid_print
+          print('fetchBooks sample: ${data[0]}');
+        }
+      } else {
+        final code = response?.statusCode ?? 0;
+        final body = response?.body ?? 'no response';
+        Get.snackbar('Error', 'Gagal mengambil data buku (status $code)');
+        // also print body to console for debugging
+        // ignore: avoid_print
+        print('fetchBooks failed: status=$code body=$body');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Gagal mengambil data book');
+      Get.snackbar('Error', 'Gagal mengambil data book: ${e.toString()}');
+      // ignore: avoid_print
+      print('fetchBooks exception: $e');
     } finally {
       isLoading.value = false;
     }

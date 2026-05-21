@@ -12,10 +12,7 @@ class BookDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Detail Book',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Detail Book', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.pink[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -65,12 +62,14 @@ class BookDetailPage extends StatelessWidget {
             // Kotak-kotak properti (Sesuai Poin 2 PDF)
             _buildInfoCard('Subtitle', book.subtitle),
             _buildInfoCard('Deskripsi', book.description),
+            _buildInfoCard(
+              'Penulis',
+              book.authors.isNotEmpty ? book.authors.join(', ') : '-',
+            ),
+            _buildInfoCard('Penerbit', book.publisher),
             _buildInfoCard('Tanggal Terbit', book.publishedDate),
             _buildInfoCard('ISBN', book.isbn),
-            _buildInfoCard(
-              'Jumlah Halaman',
-              book.pageCount,
-            ),
+            _buildInfoCard('Jumlah Halaman', book.pageCount),
           ],
         ),
       ),

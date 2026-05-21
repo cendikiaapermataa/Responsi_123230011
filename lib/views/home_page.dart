@@ -56,11 +56,35 @@ class HomePage extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                // --- PERBAIKAN SUBTITLE UNTUK MENAMPILKAN ID, RELEASED, RATING ---
+                leading: book.coverImage.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          book.coverImage,
+                          width: 50,
+                          height: 70,
+                          fit: BoxFit.cover,
+                          errorBuilder: (c, e, s) =>
+                              const Icon(Icons.book, size: 50),
+                        ),
+                      )
+                    : const Icon(Icons.book, size: 50, color: Colors.grey),
+
+                // Detailed subtitle with authors, id, released, pages
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 4),
+                    if (book.authors.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        'By ${book.authors.join(', ')}',
+                        style: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 6),
                     Text(
                       "ID: ${book.isbn}",
                       style: TextStyle(
@@ -96,6 +120,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
+                isThreeLine: true,
                 trailing: const Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
